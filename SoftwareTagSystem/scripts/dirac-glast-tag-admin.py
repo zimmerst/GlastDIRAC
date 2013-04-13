@@ -10,7 +10,7 @@ including the --site= parameter, it will only act on the site
 from DIRAC.Core.Base import Script
 from DIRAC import S_OK
 
-statuslist = ["add",'remove','flagOK','flagBad']
+statuslist = ["addTag",'removeTag','flagOK','flagBad']
 
 class Params(object):
     def __init__(self):
@@ -29,10 +29,10 @@ class Params(object):
         self.status = opt
         return S_OK()
     def registerswitch(self):
-        Script.registerSwitch("T:", 'Tag=', 'Tag to affect', self.setTag)
-        Script.registerSwitch("S:", 'Sites=', 'Site(s) to consider, comma separated', self.setSite)
-        Script.registerSwitch("",'Status=','Status to change, among %s'%statuslist,self.setStatus)
-        Script.setUsageMessage("-T and --Status are mandatory")
+        Script.registerSwitch("", 'tag=', 'tag to affect', self.setTag)
+        Script.registerSwitch("", 'site=', 'site(s) to consider, comma separated', self.setSite)
+        Script.registerSwitch("",'action=','action, among %s'%statuslist,self.setStatus)
+        Script.setUsageMessage("--tag and --action are mandatory")
     
 if __name__ == "__main__":
     cli_p = Params()
@@ -65,10 +65,10 @@ if __name__ == "__main__":
     mode = cli_p.status
     
     tag = cli_p.tag
-    if mode == "add":
+    if mode == "addTag":
         for site in sites:
             client.addTagAtSite(tag,site)
-    elif mode == "remove":
+    elif mode == "removeTag":
         for site in sites:
             client.removeTagAtSite(tag,site)
     elif mode.startswith("flag"):
