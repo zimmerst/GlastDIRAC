@@ -1,3 +1,8 @@
+[v1r2p1]
+
+*Pipeline System
+FIX: bugfix to wrapper
+
 [v1r2p0]
 *Pipeline system
 NEW: added pipeline-wrapper to DIRAC installation. For now this is still being 

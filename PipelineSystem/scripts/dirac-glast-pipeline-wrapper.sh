@@ -81,7 +81,8 @@ fi
 echo "WE STARTED: \n ${MSG}"
  
 # Note this is the first attempt to write to the working dir. Will fail if no disk space.
-export PIPELINE_SUMMARY=`pwd`/pipeline_summary $ echo -e "${MSG}" > ${PIPELINE_SUMMARY}
+export PIPELINE_SUMMARY=`pwd`/pipeline_summary
+echo -e "${MSG}" > ${PIPELINE_SUMMARY}
 
  
 # Support for allowing user to re-run interactively
