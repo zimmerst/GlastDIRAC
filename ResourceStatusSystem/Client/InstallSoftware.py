@@ -28,20 +28,32 @@ def getArrayFromTag(tag):
 
 
 
-def InstallSoftware(tag, verbose=True):
+def InstallSoftware(tag, verbose=True, forceValidate = False):
   """ Look into the shared area and report back to the SoftwareTag service
   """
   from DIRAC import gLogger,gConfig
 
   if not 'VO_GLAST_ORG_SW_DIR' in os.environ:
     return S_ERROR("Missing VO_GLAST_ORG_SW_DIR environment variable")
-
   base_sw_dir = os.environ['VO_GLAST_ORG_SW_DIR']
-  
+  # get site info
+  site = gConfig.getValue('/LocalSite/Site','')
+  if site == '':
+      return S_ERROR("Fail to retrieve the site name")
+
   from GlastDIRAC.ResourceStatusSystem.Client.SoftwareTagClient import SoftwareTagClient
   swtc = SoftwareTagClient()
-
-  
+  # check if tag is not already present
+  res = swtc.getTagsAtSite(tag,site)
+  if not res['OK']:
+      return S_ERROR("Failed to retrieve tags registered for site %s, message: %s"%(site,res["Message"]))
+  else:
+      gLogger.notice("Found following tags on site %s:\n%s"%(site,str(res)))
+      if tag in res["value"]: 
+          # we should break here if the tag is already there.
+          gLogger.notice("Tag already found on site, doing nothing!")
+          return S_OK("Tag found already - nothing to do")
+        
   gLogger.notice("Found the following software directory:", base_sw_dir)
   message = None
   
@@ -95,20 +107,19 @@ def InstallSoftware(tag, verbose=True):
           shutil.rmtree(SW_SHARED_DIR+array[1]);
       return S_ERROR("Error during the retrieval of '"+array[1]+"' from '"+rsync_server+"'")
     gLogger.notice(" -> OK !")  
-  
-  
-    site = gConfig.getValue('/LocalSite/Site','')
-    if site == '':
-        return S_ERROR("Fail to retrieve the site name")
-        
-    res = swtc.updateStatus(tag,site,"Valid")
-    if not res['OK']:
-        return S_ERROR('Message: %s'%res['Message'])
-    elif res['Value']['Failed']:
-        return S_ERROR('Failed to update %s'%res['Value']['Failed'])
-    else:
-        return S_ERROR('Successfully updated %i CEs'%len(res['Value']['Successful']))
-    return
+    # since we install a tag, we should register a new one:
+    res = swtc.addTagAtSite(tag,site)
+    
+    # optional allow enforced validation!
+    if forceValidate:
+        res = swtc.updateStatus(tag,site,"Valid")
+        if not res['OK']:
+            return S_ERROR('Message: %s'%res['Message'])
+        elif res['Value']['Failed']:
+            return S_ERROR('Failed to update %s'%res['Value']['Failed'])
+        else:
+            return S_ERROR('Successfully updated %i CEs'%len(res['Value']['Successful']))
+        return
   
   return S_OK()
 
@@ -120,24 +131,28 @@ if __name__ == '__main__':
     
     from DIRAC import gLogger, exit as dexit
     
-    verbose = False
     Script.registerSwitch( "v", "verbose", "Turn verbose on"  )
+    Script.registerSwitch( "f", "forceValidate", "force setting new tag to VALID"  )
     Script.setUsageMessage( '\n'.join( [ __doc__.split( '\n' )[1],
                                        'Usage:',
                                        '  %s [option|cfgfile] ... LFN ...' % Script.scriptName,
                                        'Arguments:',
                                        '  TAG:      Software tag you want to install' ] ) )
     Script.parseCommandLine()
-    for switch in Script.getUnprocessedSwitches():
-      if switch[0] == "v" or switch[0].lower() == "verbose":
-        verbose =  True
-    
+    switches = Script.getUnprocessedSwitches()
+    forceValid = False
+    verbose = False
+    for switch in switches:
+        if switch[0] == "v" or switch[0].lower() == "verbose":
+            verbose =  True
+        elif switch[0] == "f" or switch[0].lower() =="forceValidate":
+            forceValid = True 
     args = Script.getPositionalArgs()
     
     if len( args ) != 1:
         Script.showHelp()
 
-    res = InstallSoftware(args[0],verbose)
+    res = InstallSoftware(args[0],verbose=verbose,forceValidate=forceValid)
     if not res['OK']:
       gLogger.error(res['Message'])
       dexit(1)
