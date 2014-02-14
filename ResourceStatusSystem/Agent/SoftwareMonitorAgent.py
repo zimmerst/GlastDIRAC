@@ -9,7 +9,7 @@ created: 04/06/2013
 from DIRAC.Core.Base.AgentModule                                import AgentModule
 from DIRAC import S_OK
 from GlastDIRAC.ResourceStatusSystem.Client.SoftwareTagClient   import SoftwareTagClient
-from GlastDIRAC.Core.Utilities import SiteUtils
+from GlastDIRAC.Core.Utilities.SiteUtils                        import getSitesForCE
 from DIRAC.Interfaces.API.DiracAdmin                            import DiracAdmin
 
 
@@ -61,7 +61,7 @@ class SoftwareMonitorAgent(AgentModule):
       
     for tag, ces in res['Value'].items():
       for ce in ces: 
-        res = SiteUtils.getSiteForCEs([ce])
+        res = getSiteForCEs([ce])
         if not res["OK"]:
             self.log.error("could not retrieve Site name for CE %s"%ce)
         sites = res["Value"].keys()
