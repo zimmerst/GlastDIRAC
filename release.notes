@@ -1,5 +1,7 @@
 [v1r3p10]
 
+*PipelineSystem
+NEW: dirac-glast-pipeline-kill: shadows dirac-wms-job-kill but uses shifter certificate (like submit)
 *MonitoringSystem
 NEW: dirac-glast-get-stalled-pilot-info: monitoring tool to get stalled job info (particularly pilot info)
 
