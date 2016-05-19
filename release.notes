@@ -1,3 +1,201 @@
+[v1r4p3]
+
+*All
+NEW: bump to DIRAC-v6r14p26
+FIX: bugfixes & syntax errors in PipelineSystem
+FIX: cleanup & refactoring
+
+[v1r4p2]
+
+*All
+NEW: bump to DIRAC-v6r14p22
+FIX: DIRAC release upgrade required to address https://github.com/Glast/GlastDIRAC/issues/133
+FIX: old DIRAC release was buggy, removed v1r4p1
+
+[v1r4p1]
+
+*All
+NEW: bump to DIRAC-v6r14p21
+FIX: DIRAC release upgrade required to address https://github.com/Glast/GlastDIRAC/issues/133
+
+[v1r4p0]
+
+*All
+NEW: bump to DIRAC-v6r14
+FIX: use DataManager instead of ReplicaManager (deprecated since v6r14)
+FIX: updated global glast.cfg
+FIX: removed ResourceStatusSystem (deprecated and unused)
+
+[v1r3p17]
+
+*All
+NEW: bump to DIRAC-v6r14
+FIX: use DataManager instead of ReplicaManager (deprecated since v6r14)
+FIX: updated global glast.cfg
+REMOVE: ResourceStatusSystem (deprecated and unused)
+
+[v1r3p16]
+
+*All
+NEW: bump to DIRAC-v6r14
+
+[v1r3p16]
+
+*All
+NEW: bump to DIRAC-v6r12p5
+
+*PipelineSystem
+FIX: GridAccess - address LPG-39
+
+[v1r3p15]
+
+*PipelineSystem
+FIX: GridAccess - use bulk retrieval as much as possible, fixes 'https://github.com/Glast/GlastDIRAC/issues/118'_ providing right return codes
+
+[v1r3p14]
+
+*All
+NEW: bump to DIRAC-v6r11p1
+
+*PipelineSystem
+NEW: return codes for GridAccess module `here <https://confluence.slac.stanford.edu/x/s4ItCg>`_
+
+[v1r3p13]
+
+*PipelineSystem
+FIX: loglevel fix
+
+[v1r3p12]
+
+*All
+NEW: bump to DIRAC-v6r11 integration
+
+*PipelineSystem
+FIX: bugfix in GridAccess module causing code to break while it should return !=0 exit code
+
+[v1r3p11]
+
+*All
+NEW: bump to DIRAC-v6r10p15
+NEW: bump to python 2.7
+
+*PipelineSystem
+FIX: bugfix in dirac-glast-pipeline-kill
+
+[v1r3p10]
+
+*PipelineSystem
+NEW: dirac-glast-pipeline-kill: shadows dirac-wms-job-kill but uses shifter certificate (like submit)
+
+*MonitoringSystem
+NEW: added MonitoringSystem module
+NEW: dirac-glast-get-stalled-pilot-info: monitoring tool to get stalled job info (particularly pilot info)
+
+[v1r3p9]
+
+*All
+NEW: transition to DIRAC v6r8p24 as base system
+
+*PipelineSystem
+FIX: dirac-glast-pipeline-status (bvan): use job summary instead of status because it's more complete. Added some translation logic for start times and end times.
+CHANGE: extended logging features only on demand, otherwise report standard jobs - reduces RPC calls
+FIX: remove zombie-killing; jobs that have reported 'failed' are not 're-killed' again.
+
+[v1r3p8]
+
+*ResourceStatusSystem
+FIX: overhaul of installSoftware.py, addresses LPG-32, https://jira.slac.stanford.edu/browse/LPG-32
+NEW: added site-mask check to SoftwareMonitorAgent. If CE not in site mask, ignore CE; should reduce number of waiting pilots submitted to sites that are not active
+
+*Core
+NEW: added SiteUtils module
+
+[v1r3p7]
+
+*PipelineSystem
+FIX: change setGroup to setJobGroup() - thanks SP for noticing this!
+
+[v1r3p6]
+
+*PipelineSystem
+FIX: change type to group
+
+[v1r3p5]
+
+*PipelineSystem
+FIX: Jobs that did not have EndTime attribute, get it assigned automatically. This is to take care of some jobs that should be marked killed/deleted
+FIX: Kill jobs that are marked as Failed but still present in the system.
+NEW: added "--p type" to submission script, allowing to set the jobType
+NEW: mailDebug option, can be enabled via "--p mailDebug", uses test/dirac-glast-pipeline-wrapper-debug.sh as wrapper script
+
+*ResourceStatusSystem
+NEW: List softwares pre-install on ccglast02.in2p3.fr. those software are available to be install on sites
+
+*All
+FIX: various minor bugfixes
+
+[v1r3p4]
+
+*PipelineSystem
+NEW: added xrootd-key tab file to job. This one takes its values from operations/Pipeline/XrdKey
+NEW: logfile retrieval part of extension
+FIX: GridAccess - bugfixes.
+
+*ResourceStatusSystem
+NEW: InstallSoftwareArea & CLI changes. 
+
+*All
+FIX: Dirac variables for VO specific stuff
+
+
+[v1r3p3]
+
+*PipelineSystem
+FIX: bugfixes.
+
+[v1r3p2]
+
+*PipelineSystem
+FIX: bugfixes.
+
+[v1r3p1]
+
+*PipelineSystem
+FIX: bugfixes. 
+
+[v1r3p0]
+
+*PipelineSystem
+NEW: Interface/GlastJob : Workflow by S. Poss to move wrapper to DIRAC Node installation
+
+[v1r2p0]
+*PipelineSystem
+NEW: added pipeline-wrapper to DIRAC installation. For now this is still being 
+added to the input sandbox but eventually this should be replaced in the workflow
+FIX: minor bugfixes
+CHANGE: get rid of P2_* variables.
+PRODUCTION RELEASE!
+
+[v1r1p10]
+*PipelineSystem
+FIX: sendmail.
+
+[v1r1p9]
+*PipelineSystem
+FIX: sendmail.
+
+[v1r1p8]
+
+*PipelineSystem
+NEW: sendmail utility
+
+[v1r1p7]
+
+*PipelineSystem
+NEW: additional logic check, evaluates PIPELINE_* vars and throws exception if not defined
+FIX: logFile.txt is now the application output log, unless specified in $PIPELINE_LOGFILE
+CHANGE: GridAccess uses CS properties rather than hard-coded paths
+
 [v1r1p6]
 
 *ResourceStatusSystem
